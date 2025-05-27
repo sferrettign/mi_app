@@ -1,6 +1,4 @@
 from flask import Flask, request
-import requests
-import os
 
 app = Flask(__name__)
 
@@ -10,31 +8,8 @@ def home():
 
 @app.route('/callback')
 def callback():
-    try:
-        code = request.args.get('code')
-        if not code:
-            return "No se recibió el código de autorización."
-
-        token_response = get_access_token(code)
-        if 'access_token' in token_response:
-            return f"Access Token: {token_response['access_token']}"
-        else:
-            return f"Error al obtener token: {token_response}"
-    except Exception as e:
-        return f"Error interno: {str(e)}"
-
-def get_access_token(code):
-    url = "https://api.mercadolibre.cl/oauth/token"
-    data = {
-        "grant_type": "authorization_code",
-        "client_id": "8124944839883970",
-        "client_secret": "ApMUdaSXq4JbnIcmumfd53egwblUW1AD",
-        "code": code,
-        "redirect_uri": "https://mi-app-fci6.onrender.com/callback"
-    }
-    response = requests.post(url, data=data)
-    return response.json()
+    code = request.args.get('code')
+    return f'Recibí el código: {code}'
 
 if __name__ == '__main__':
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=int(os.environ.get("PORT", 5000)))
