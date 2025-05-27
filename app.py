@@ -10,15 +10,18 @@ def home():
 
 @app.route('/callback')
 def callback():
-    code = request.args.get('code')
-    if not code:
-        return "No se recibió el código de autorización."
+    try:
+        code = request.args.get('code')
+        if not code:
+            return "No se recibió el código de autorización."
 
-    token_response = get_access_token(code)
-    if 'access_token' in token_response:
-        return f"Access Token: {token_response['access_token']}"
-    else:
-        return f"Error al obtener token: {token_response}"
+        token_response = get_access_token(code)
+        if 'access_token' in token_response:
+            return f"Access Token: {token_response['access_token']}"
+        else:
+            return f"Error al obtener token: {token_response}"
+    except Exception as e:
+        return f"Error interno: {str(e)}"
 
 def get_access_token(code):
     url = "https://api.mercadolibre.cl/oauth/token"
